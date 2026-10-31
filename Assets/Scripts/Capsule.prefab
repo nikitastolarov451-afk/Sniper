@@ -124,10 +124,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58cdc9864704e124e8f537789611a702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeBetweenShots: 2
+  timeBetweenShots: 3
   hiddenPosition: {x: 0, y: 0, z: 0}
   visiblePosition: {x: 0, y: 0, z: 0}
-  moveSpeed: 1
+  moveSpeed: 2
 --- !u!1001 &3448449713076710315
 PrefabInstance:
   m_ObjectHideFlags: 0

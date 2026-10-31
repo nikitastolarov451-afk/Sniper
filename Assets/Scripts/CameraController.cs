@@ -1,19 +1,25 @@
+using System;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     public float mouseSensitivity = 100f;
-    public float maxLookAngle = 80f;
     private float xRotation = 0f;
+    public Camera cam; //ссылка на компонент камеры
+    public float normalFOV = 60f; //полезрение камеры в обычном режиме
+    public float zoomFOV = 20f;   //суженое ну или конечное поле зрение
 
-    public Camera cam; 
-    public float normalFOV = 60f; 
-    public float zoomFOV = 20f;   
+    //Добавлю переменные для дыхания снайпера(ввер вниз я сделал)
+    [Header("Sway Settings")]
+    public float swayPower = 1.0f;
+    private float swayTimer = 0f;
+    public float swaySpeed = 1.0f;
+
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;//фиксирую курсос по центру
+        Cursor.visible = false;//и делаю курсор невидимм
     }
 
     void Update()
@@ -22,10 +28,20 @@ public class CameraController : MonoBehaviour
         float mouseY = Input.GetAxisRaw("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -maxLookAngle, maxLookAngle);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        transform.parent.Rotate(Vector3.up * mouseX);
+//само покачивание
+        float swayx = 0f;
+        if(Input.GetKey(KeyCode.LeftShift))
+            swayTimer = 0f;
+        else
+            swayTimer = swayTimer + Time.deltaTime * swaySpeed;
+            swayx = MathF.Sin(swayTimer) * swayPower;
+
+        float finalXRotation = xRotation + swayx;
+        
+
+        transform.localRotation = Quaternion.Euler(finalXRotation, 0f, 0f);
+        transform.root.Rotate(Vector3.up * mouseX);
 
         // --- ДОБАВЛЯЕМ ЛОГИКУ ЗУМА (в самом конце Update) ---
         if (cam != null)
@@ -44,6 +60,5 @@ public class CameraController : MonoBehaviour
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, normalFOV, Time.deltaTime * 15f);
             }
         }
-        // ----------------------------------------------------
     }
 }

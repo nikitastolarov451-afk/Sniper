@@ -3,16 +3,16 @@ using TMPro;
 
 public class GameSpawner : MonoBehaviour
 {
-    [Header("Настройки Спавна")]
+    [Header("Спавн")]
     public GameObject criminalPrefab; 
     public Transform[] spawnPoints;   
     public int maxCriminals = 5;      
     
-    [Header("UI (Интерфейс)")]
+    [Header("UI")]
     public TextMeshProUGUI killCounterText; 
     
     [Header("Экран Победы")]
-    public GameObject endScreenPanel; // Сюда перетащим панель
+    public GameObject endScreenPanel; 
 
     private int spawnedCount = 0;     
     private int kills = 0; 
@@ -29,7 +29,7 @@ public class GameSpawner : MonoBehaviour
 
     void Update()
     {
-        if (!gameEnded && currentCriminal == null && spawnedCount < maxCriminals)
+        if (gameEnded == false && currentCriminal == null && spawnedCount < maxCriminals)
         {
             Invoke("SpawnNewCriminal", 1.5f);
         }
@@ -37,14 +37,16 @@ public class GameSpawner : MonoBehaviour
 
     void SpawnNewCriminal()
     {
-        if (gameEnded || currentCriminal != null) return;
+        if (gameEnded == true || currentCriminal != null)
+            return;
 
         int randomIndex = Random.Range(0, spawnPoints.Length);
         Transform chosenPoint = spawnPoints[randomIndex];
 
-        currentCriminal = Instantiate(criminalPrefab, chosenPoint.position, chosenPoint.rotation);
+
+        currentCriminal = Instantiate(criminalPrefab, chosenPoint.position, chosenPoint.rotation);// функция берет префаб и спавнит на заданных координатах
         
-        EnemyHealth enemy = currentCriminal.GetComponent<EnemyHealth>();
+        EnemyHealth enemy = currentCriminal.GetComponent<EnemyHealth>();//ищу скрипт EnemyHealth на созданом враге
         
         if (enemy != null)
         {
@@ -52,7 +54,7 @@ public class GameSpawner : MonoBehaviour
             Vector3 visiblePos = chosenPoint.position + (chosenPoint.forward * 2f);
             
             enemy.Setup(hiddenPos, visiblePos);
-            enemy.OnEnemyDied += HandleEnemyDeath;
+            enemy.OnEnemyDied += HandleEnemyDeath;//событие
         }
 
         spawnedCount++;
@@ -75,21 +77,17 @@ public class GameSpawner : MonoBehaviour
     {
         gameEnded = true;
         Debug.Log("<color=green>ПОБЕДА!</color>");
-        
-        // 1. Останавливаем время
+
         Time.timeScale = 0f;
-        
-        // 2. Показываем мышь
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // 3. Включаем панель
         if (endScreenPanel != null) endScreenPanel.SetActive(true);
-        
-        // 4. Меняем текст (по желанию)
+//Далее опционально
         if (killCounterText != null)
         {
-            killCounterText.text = "МИССИЯ ВЫПОЛНЕНА!";
+            killCounterText.text = "Враги убиты!";
             killCounterText.color = Color.green;
         }
     }

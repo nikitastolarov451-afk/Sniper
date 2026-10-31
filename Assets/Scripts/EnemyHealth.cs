@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public System.Action OnEnemyDied;
+    public System.Action OnEnemyDied;//поле события
 
     [Header("Настройки дуэли")]
-    public float timeBetweenShots = 2f; 
+    public float timeBetweenShots = 3f; 
     private float shotTimer;
 
     [Header("Движение")]
-    public Vector3 hiddenPosition; 
-    public Vector3 visiblePosition; 
+    private Vector3 hiddenPosition; 
+    private Vector3 visiblePosition; 
     public float moveSpeed = 5f;
     private bool isActive = false; 
     private bool isDead = false;
@@ -25,30 +25,32 @@ public class EnemyHealth : MonoBehaviour
 
     void Update()
     {
-        if (isDead)
+        if (isDead == true)
             return;
 
-        if (!isActive)
+        if (isActive == false)
         {
-            transform.position = Vector3.MoveTowards(transform.position, visiblePosition, moveSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, visiblePosition, moveSpeed * Time.deltaTime);//MoveTowards это метод, который потепенно сближает текущую позииу у трансформа врага
             if (Vector3.Distance(transform.position, visiblePosition) < 0.1f) 
-                isActive = true;
+                isActive = true;//короче, когда мо энеми активен , то управление стрельбой переходит на else
         }
         else
+
         {
             shotTimer -= Time.deltaTime;
             if (shotTimer <= 0f)
             {
                 SniperShoot player = FindFirstObjectByType<SniperShoot>();
-                if (player != null) player.TakeDamage(50); 
+                if (player != null)
+                    player.TakeDamageSniper(50); 
                 shotTimer = timeBetweenShots; 
             }
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamageEnemy(int damage)
     {
-        if (isDead)
+        if (isDead == true)
             return; 
         isDead = true;
         OnEnemyDied?.Invoke(); 
