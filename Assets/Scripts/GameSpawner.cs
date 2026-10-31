@@ -76,8 +76,6 @@ public class GameSpawner : MonoBehaviour
     void WinGame()
     {
         gameEnded = true;
-        Debug.Log("<color=green>ПОБЕДА!</color>");
-
         Time.timeScale = 0f;
 
         Cursor.lockState = CursorLockMode.None;

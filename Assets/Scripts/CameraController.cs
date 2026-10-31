@@ -5,9 +5,9 @@ public class CameraController : MonoBehaviour
 {
     public float mouseSensitivity = 100f;
     private float xRotation = 0f;
-    public Camera cam; //ссылка на компонент камеры
-    public float normalFOV = 60f; //полезрение камеры в обычном режиме
-    public float zoomFOV = 20f;   //суженое ну или конечное поле зрение
+    public Camera cam; 
+    public float normalFOV = 60f; 
+    public float zoomFOV = 20f;
 
     //Добавлю переменные для дыхания снайпера(ввер вниз я сделал)
     [Header("Sway Settings")]
@@ -18,8 +18,8 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;//фиксирую курсос по центру
-        Cursor.visible = false;//и делаю курсор невидимм
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
@@ -43,18 +43,18 @@ public class CameraController : MonoBehaviour
         transform.localRotation = Quaternion.Euler(finalXRotation, 0f, 0f);
         transform.root.Rotate(Vector3.up * mouseX);
 
-        // --- ДОБАВЛЯЕМ ЛОГИКУ ЗУМА (в самом конце Update) ---
+        
         if (cam != null)
         {
-            // Получаем прокрутку колесика
+            
             float scroll = Input.GetAxis("Mouse ScrollWheel");
 
-            // Крутим вверх (приближаем)
+            
             if (scroll > 0f)
             {
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, zoomFOV, Time.deltaTime * 15f);
             }
-            // Крутим вниз (отдаляем)
+            
             else if (scroll < 0f)
             {
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, normalFOV, Time.deltaTime * 15f);

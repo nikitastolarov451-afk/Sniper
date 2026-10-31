@@ -31,7 +31,7 @@ public class EnemyHealth : MonoBehaviour
         if (isActive == false)
         {
             transform.position = Vector3.MoveTowards(transform.position, visiblePosition, moveSpeed * Time.deltaTime);//MoveTowards это метод, который потепенно сближает текущую позииу у трансформа врага
-            if (Vector3.Distance(transform.position, visiblePosition) < 0.1f) 
+            if (Vector3.Distance(transform.position, visiblePosition) < 0.1f) //Distance измеряет расстояние
                 isActive = true;//короче, когда мо энеми активен , то управление стрельбой переходит на else
         }
         else
